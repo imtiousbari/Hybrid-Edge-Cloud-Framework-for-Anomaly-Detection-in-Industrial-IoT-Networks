@@ -38,26 +38,21 @@
             display: flex;
             justify-content: center;
             gap: 50px;
-            /* margin-bottom: 40px;
-        margin-top: 40px; */
         }
 
         .chart-container {
             width: 40%;
             background-color: #f0f4f8;
-            /* light card background */
             padding: 15px 20px;
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             min-width: 150px;
-            /* optional: keep cards somewhat uniform */
             text-align: center;
             font-weight: 500;
         }
 
         .scrollable-table-container {
             max-height: 200px;
-            /* Adjust height so that ~5 rows fit */
             overflow-y: auto;
             display: block;
             border: 2px solid black;
@@ -72,29 +67,24 @@
 
         .stats-container p {
             background-color: #f0f4f8;
-            /* light card background */
             padding: 15px 20px;
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             min-width: 150px;
-            /* optional: keep cards somewhat uniform */
             text-align: center;
             font-weight: 500;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        .status-normal {
+            color: green;
+            font-weight: bold;
         }
 
-        th,
-        td {
-            padding: 8px;
-            border: 1px solid #ddd;
-            text-align: left;
+        .status-anomaly {
+            color: red;
+            font-weight: bold;
         }
 
-        /* Optional: fix the header so it stays visible while scrolling */
         thead th {
             position: sticky;
             top: 0;
@@ -106,38 +96,19 @@
 </head>
 
 <body>
-    <h1 style="
-        display: flex;
-        justify-content: center;
-        background-color: #000000;
-        color: whitesmoke;
-        padding: 15px 20px;
-        /* border-radius: 12px; */
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        margin: 0;
-        /* min-width: 150px; */
-      ">
+    <h1 style="display: flex; justify-content: center; background-color: #000000; color: whitesmoke; padding: 15px 20px; margin: 0;">
         Hybrid Edge-Cloud Anomaly Detection Dashboard
     </h1>
     <div style="margin: 0px 20px;">
         <h2>Summary</h2>
-        <div style="
-        display: flex;
-        justify-content: space-evenly;
-        align-items: center;
-        flex-direction: row-reverse;
-      ">
+        <button>Real Time</button>
+
+        <div style="display: flex; justify-content: space-evenly; align-items: center; flex-direction: row-reverse;">
             <div class="stats-container">
                 <p><strong>Total flow records:</strong> {{ total_flow }}</p>
-                <p>
-                    <strong>Flow anomalies:</strong> {{ flow_count }} ({{ flow_percent
-                    }}%)
-                </p>
+                <p><strong>Flow anomalies:</strong> {{ flow_count }} ({{ flow_percent }}%)</p>
                 <p><strong>Total packet records:</strong> {{ total_packet }}</p>
-                <p>
-                    <strong>Packet anomalies:</strong> {{ packet_count }} ({{
-                    packet_percent }}%)
-                </p>
+                <p><strong>Packet anomalies:</strong> {{ packet_count }} ({{ packet_percent }}%)</p>
             </div>
             <div class="charts">
                 <div class="chart-container">
@@ -151,12 +122,12 @@
             </div>
         </div>
 
+        <!-- Flow Table -->
         <h2>Recent Flow Anomalies</h2>
         {% if recent_flow_anomalies %}
-
         <div class="scrollable-table-container">
             <table>
-                <thead style="">
+                <thead>
                     <tr>
                         {% for col in recent_flow_anomalies[0].keys() %}
                         <th>{{ col }}</th>
@@ -166,8 +137,14 @@
                 <tbody>
                     {% for row in recent_flow_anomalies %}
                     <tr>
-                        {% for val in row.values() %}
-                        <td>{{ val }}</td>
+                        {% for col, val in row.items() %}
+                        <td>
+                            {% if col == 'status' %}
+                                <span class="status-{{ val }}">{{ val }}</span>
+                            {% else %}
+                                {{ val }}
+                            {% endif %}
+                        </td>
                         {% endfor %}
                     </tr>
                     {% endfor %}
@@ -178,6 +155,7 @@
         <p>No recent flow anomalies detected.</p>
         {% endif %}
 
+        <!-- Packet Table -->
         <h2>Recent Packet Anomalies</h2>
         {% if recent_packet_anomalies %}
         <div class="scrollable-table-container">
@@ -192,8 +170,14 @@
                 <tbody>
                     {% for row in recent_packet_anomalies %}
                     <tr>
-                        {% for val in row.values() %}
-                        <td>{{ val }}</td>
+                        {% for col, val in row.items() %}
+                        <td>
+                            {% if col == 'status' %}
+                                <span class="status-{{ val }}">{{ val }}</span>
+                            {% else %}
+                                {{ val }}
+                            {% endif %}
+                        </td>
                         {% endfor %}
                     </tr>
                     {% endfor %}
@@ -204,31 +188,7 @@
         <p>No recent packet anomalies detected.</p>
         {% endif %}
     </div>
-    <!-- <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
-    <script>
-        const socket = io();
 
-        socket.on('update_dashboard', function (data) {
-            document.querySelector('p strong').innerText = `Total flow records: ${data.total_flow}`;
-            // Update counts and percentages dynamically
-            // You can also re-render charts dynamically here
-
-            // Show notification
-            const notification = document.createElement("div");
-            notification.textContent = "Dashboard updated (real-time)";
-            notification.style.position = "fixed";
-            notification.style.top = "20px";
-            notification.style.left = "20px";
-            notification.style.backgroundColor = "#2196f3";
-            notification.style.color = "white";
-            notification.style.padding = "10px 20px";
-            notification.style.borderRadius = "8px";
-            notification.style.zIndex = "1000";
-            document.body.appendChild(notification);
-
-            setTimeout(() => notification.remove(), 2000);
-        });
-    </script> -->
     <script>
         const flowCtx = document.getElementById('flowChart').getContext('2d');
         const packetCtx = document.getElementById('packetChart').getContext('2d');
@@ -238,18 +198,18 @@
             datasets: [{
                 label: 'Flow Records',
                 data: [{{ total_flow - flow_count }}, {{ flow_count }}],
-        backgroundColor: ['#4caf50', '#f44336']
-          }]
-      };
+                backgroundColor: ['#4caf50', '#f44336']
+            }]
+        };
 
         const packetData = {
             labels: ['Normal', 'Anomaly'],
             datasets: [{
                 label: 'Packet Records',
                 data: [{{ total_packet - packet_count }}, {{ packet_count }}],
-        backgroundColor: ['#2196f3', '#ff5722']
-          }]
-      };
+                backgroundColor: ['#2196f3', '#ff5722']
+            }]
+        };
 
         new Chart(flowCtx, {
             type: 'pie',
@@ -275,37 +235,10 @@
             }
         });
 
-        // Refresh the page every 5 seconds
+        // Auto refresh
         setTimeout(function () {
             location.reload();
         }, 50000);
-
-        // Show notification when page reloads
-        window.addEventListener("load", function () {
-            const notification = document.createElement("div");
-            notification.textContent = "No therds found";
-            notification.style.position = "fixed";
-            notification.style.top = "50px";
-            notification.style.right = "20px";
-            notification.style.backgroundColor = "#ffff";
-            notification.style.color = "#00000";
-            notification.style.padding = "30px 30px";
-            notification.style.borderRadius = "8px";
-            notification.style.boxShadow = "0 2px 6px rgba(0, 0, 0, 0.2)";
-            notification.style.fontWeight = "bold";
-            notification.style.zIndex = "1000";
-            document.body.appendChild(notification);
-
-            setTimeout(() => {
-                notification.remove();
-            }, 2000);
-        });
     </script>
-
 </body>
-
 </html>
-
-
-
-
