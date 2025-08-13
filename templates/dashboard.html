@@ -2,9 +2,30 @@
 <html lang="en">
 
 <head>
+
+
     <meta charset="UTF-8" />
     <title>Anomaly Detection Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="https://cdn.socket.io/4..min.js"></script>
+
+
+<script>
+    const socket = io();
+  
+    socket.on('update', function(data) {
+      document.getElementById('flow-count').innerText = data.flow_count;
+      document.getElementById('packet-count').innerText = data.packet_count;
+      document.getElementById('flow-percent').innerText = data.flow_percent + '%';
+      document.getElementById('packet-percent').innerText = data.packet_percent + '%';
+      // You can also dynamically update tables with recent anomalies here
+    });
+  </script>
+  
+
+
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -103,6 +124,9 @@
         <h2>Summary</h2>
         <button>Real Time</button>
 
+        <!-- <p>Flow anomalies: <span id="flow-count"></span> (<span id="flow-percent"></span>)</p>
+        <p>Packet anomalies: <span id="packet-count"></span> (<span id="packet-percent"></span>)</p> -->
+        
         <div style="display: flex; justify-content: space-evenly; align-items: center; flex-direction: row-reverse;">
             <div class="stats-container">
                 <p><strong>Total flow records:</strong> {{ total_flow }}</p>
@@ -123,7 +147,8 @@
         </div>
 
         <!-- Flow Table -->
-        <h2>Recent Flow Anomalies</h2>
+
+        <h2>Flow - Anomalies</h2>
         {% if recent_flow_anomalies %}
         <div class="scrollable-table-container">
             <table>
@@ -151,12 +176,39 @@
                 </tbody>
             </table>
         </div>
-        {% else %}
-        <p>No recent flow anomalies detected.</p>
-        {% endif %}
-
-        <!-- Packet Table -->
-        <h2>Recent Packet Anomalies</h2>
+        {% else %}<p>No anomalies found.</p>{% endif %}
+    
+        <h2>Flow - Normal</h2>
+        {% if recent_flow_normals %}
+        <div class="scrollable-table-container">
+            <table>
+                <thead>
+                    <tr>
+                        {% for col in recent_flow_normals[0].keys() %}
+                        <th>{{ col }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in recent_flow_normals %}
+                    <tr>
+                        {% for col, val in row.items() %}
+                        <td>
+                            {% if col == 'status' %}
+                                <span class="status-{{ val }}">{{ val }}</span>
+                            {% else %}
+                                {{ val }}
+                            {% endif %}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}<p>No normal records found.</p>{% endif %}
+    
+        <h2>Packet - Anomalies</h2>
         {% if recent_packet_anomalies %}
         <div class="scrollable-table-container">
             <table>
@@ -184,9 +236,37 @@
                 </tbody>
             </table>
         </div>
-        {% else %}
-        <p>No recent packet anomalies detected.</p>
-        {% endif %}
+        {% else %}<p>No anomalies found.</p>{% endif %}
+    
+        <h2>Packet - Normal</h2>
+        {% if recent_packet_normals %}
+        <div class="scrollable-table-container">
+            <table>
+                <thead>
+                    <tr>
+                        {% for col in recent_packet_normals[0].keys() %}
+                        <th>{{ col }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in recent_packet_normals %}
+                    <tr>
+                        {% for col, val in row.items() %}
+                        <td>
+                            {% if col == 'status' %}
+                                <span class="status-{{ val }}">{{ val }}</span>
+                            {% else %}
+                                {{ val }}
+                            {% endif %}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}<p>No normal records found.</p>{% endif %}
     </div>
 
     <script>
