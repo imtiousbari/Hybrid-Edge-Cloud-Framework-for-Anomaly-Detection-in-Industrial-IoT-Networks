@@ -48,4 +48,3 @@ with open(csv_file, "a", newline="") as f:
         writer.writerow([src_port, dst_port, proto, flow['Total_Fwd'], flow['Total_Bwd'], round(duration,5)])
 
 print("Saved flows to", csv_file)
-

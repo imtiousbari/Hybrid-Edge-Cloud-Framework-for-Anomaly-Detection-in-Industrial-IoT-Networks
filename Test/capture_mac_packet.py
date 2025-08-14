@@ -12,7 +12,7 @@ os.makedirs(folder, exist_ok=True)
 csv_human = os.path.join(folder, "network_packets_human.csv")
 csv_numeric = os.path.join(folder, "network_packets_numeric.csv")
 
-# Write headers
+# Headers
 headers = [
     "Payload Length","Inter Arrival Time","TCP Window Size","Jitter",
     "Stream 1 Mean","Stream 1 Var","Src IP 1 Mean","Src IP 1 Var",
@@ -20,14 +20,15 @@ headers = [
     "Src IP 60 Var","Channel 1 Mean","Protocol"
 ]
 
+# Overwrite CSVs at start
 with open(csv_human, "w", newline="") as f:
     csv.writer(f).writerow(headers)
 with open(csv_numeric, "w", newline="") as f:
     csv.writer(f).writerow(headers)
 
 flows = {}
-packet_count = 0  # Counter
-max_packets = 100  # Stop after 20 packets
+packet_count = 0
+max_packets = 100
 
 def ip_to_int(ip):
     try:
@@ -43,6 +44,7 @@ def protocol_to_num(proto):
 
 def process_packet(pkt):
     global packet_count
+
     if packet_count >= max_packets:
         return False  # Stop sniffing
 
@@ -78,51 +80,28 @@ def process_packet(pkt):
         channel1_mean = statistics.mean(flows[key]['payloads'])
 
         row_human = [
-            payload_len,
-            iat[-1] if iat else 0,
-            tcp_window,
-            jitter,
-            stream1_mean,
-            stream1_var,
-            stream1_mean,
-            stream1_var,
-            stream5_mean,
-            srcip5_var,
-            stream10_var,
-            stream30_var,
-            srcip60_var,
-            channel1_mean,
-            proto
+            payload_len, iat[-1] if iat else 0, tcp_window, jitter,
+            stream1_mean, stream1_var, stream1_mean, stream1_var,
+            stream5_mean, srcip5_var, stream10_var, stream30_var,
+            srcip60_var, channel1_mean, proto
         ]
 
         row_numeric = [
-            payload_len,
-            iat[-1] if iat else 0,
-            tcp_window,
-            jitter,
-            stream1_mean,
-            stream1_var,
-            ip_to_int(src),
-            stream1_var,
-            stream5_mean,
-            srcip5_var,
-            stream10_var,
-            stream30_var,
-            srcip60_var,
-            channel1_mean,
-            protocol_to_num(proto)
+            payload_len, iat[-1] if iat else 0, tcp_window, jitter,
+            stream1_mean, stream1_var, ip_to_int(src), stream1_var,
+            stream5_mean, srcip5_var, stream10_var, stream30_var,
+            srcip60_var, channel1_mean, protocol_to_num(proto)
         ]
-
+# if limit rows w not limit a
         with open(csv_human, "a", newline="") as f:
             csv.writer(f).writerow(row_human)
         with open(csv_numeric, "a", newline="") as f:
             csv.writer(f).writerow(row_numeric)
 
         packet_count += 1
-        if packet_count >= max_packets:
-            return False  # Stop sniffing
 
-# Start sniffing
+# Start sniffing with stop condition
 sniff(iface="en0", prn=process_packet, stop_filter=lambda x: packet_count >= max_packets)
+
 print("Saved flows to", csv_human)
 print("Saved flows to", csv_numeric)
