@@ -8,10 +8,10 @@
     <title>Anomaly Detection Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <script src="https://cdn.socket.io/4..min.js"></script>
+    <!-- <script src="https://cdn.socket.io/4..min.js"></script> -->
 
 
-<script>
+<!-- <script>
     const socket = io();
   
     socket.on('update', function(data) {
@@ -21,7 +21,7 @@
       document.getElementById('packet-percent').innerText = data.packet_percent + '%';
       // You can also dynamically update tables with recent anomalies here
     });
-  </script>
+  </script> -->
   
 
 
@@ -79,7 +79,13 @@
             border: 2px solid black;
             border-radius: 12px;
         }
-
+        .scrollable-table-containerp {
+            max-height: 300px;
+            overflow-y: auto;
+            display: block;
+            border: 2px solid black;
+            border-radius: 12px;
+        }
         .stats-container {
             display: flex;
             flex-direction: column;
