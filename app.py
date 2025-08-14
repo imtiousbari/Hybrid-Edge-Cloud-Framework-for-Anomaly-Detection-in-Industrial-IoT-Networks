@@ -11,7 +11,7 @@ def dashboard():
     flow_model = joblib.load('/Volumes/FileManager/Edge Download/CSCT Project/project/Flow_based_web/flow_based_isolation_forest_edge_model.pkl')
     packet_model = joblib.load('/Volumes/FileManager/Edge Download/CSCT Project/project/Packet_based_feature_web/packet_based_isolation_forest_model.pkl')
 
-    # Load human-readable data
+    # Load human-readable data for test
     flow_df = pd.read_csv('/Volumes/FileManager/Edge Download/CSCT Project/project/Flow_based_web/human_readable_flow_data_web.csv')
     packet_df_display = pd.read_csv('/Volumes/FileManager/Edge Download/CSCT Project/project/Packet_based_feature_web/human_readable_packet_data_web.csv')
 
