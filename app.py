@@ -26,16 +26,16 @@ def dashboard():
     # Load human-readable data for test from dataset_30%
 
     flow_df = pd.read_csv('/Volumes/FileManager/Edge Download/CSCT Project/project/Flow_based_web/human_preprocessed_flow_data_30_percent.csv')
-    # packet_df_display = pd.read_csv('/Volumes/FileManager/Edge Download/CSCT Project/project/Packet_based_feature_web/human_readable_packet_data_web.csv')
-    # packet_df_numeric = pd.read_csv('/Volumes/FileManager/Edge Download/CSCT Project/project/Packet_based_feature_web/preprocessed_packet_data_web.csv')
+    packet_df_display = pd.read_csv('/Volumes/FileManager/Edge Download/CSCT Project/project/Packet_based_feature_web/human_preprocessed_packet_data_30_percent.csv')
+    packet_df_numeric = pd.read_csv('/Volumes/FileManager/Edge Download/CSCT Project/project/Packet_based_feature_web/preprocessed_packet_data_30_percent.csv')
    
     # Load numeric (preprocessed) data for model input dataset
     # packet_df_numeric = pd.read_csv('/Volumes/FileManager/Edge Download/CSCT Project/project/Packet_based_feature_web/preprocessed_packet_data_web.csv')
 
     # Load data for test
     # flow_df = pd.read_csv('/Volumes/FileManager/Edge Download/CSCT Project/project/Code/Test/network_flows.csv')
-    packet_df_display = pd.read_csv('/Volumes/FileManager/Edge Download/CSCT Project/project/Code/Test/network_packets_human.csv')
-    packet_df_numeric = pd.read_csv('/Volumes/FileManager/Edge Download/CSCT Project/project/Code/Test/network_packets_numeric.csv')
+    # packet_df_display = pd.read_csv('/Volumes/FileManager/Edge Download/CSCT Project/project/Code/Test/network_packets_human.csv')
+    # packet_df_numeric = pd.read_csv('/Volumes/FileManager/Edge Download/CSCT Project/project/Code/Test/network_packets_numeric.csv')
 
 
 
