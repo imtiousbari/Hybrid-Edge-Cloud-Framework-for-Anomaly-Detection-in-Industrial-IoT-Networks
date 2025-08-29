@@ -1,3 +1,4 @@
 cd Code 
-mdimtiousbari@Imtiouss-MacBook-Pro Code % python3 -m venv venv
+mdimtiousbari@Imtiouss-MacBook-Pro Code % python3 -m venv venv 
 mdimtiousbari@Imtiouss-MacBook-Pro Code % source venv/bin/activate
+sudo python3
