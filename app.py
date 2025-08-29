@@ -6,6 +6,7 @@ import joblib
 from sklearn.preprocessing import StandardScaler
 import importlib.util
 
+# use this for live device test
 # test_folder = os.path.join(os.path.dirname(__file__), "Test")
 
 # for filename in os.listdir(test_folder):
@@ -29,10 +30,8 @@ def dashboard():
     packet_df_display = pd.read_csv('/Volumes/FileManager/Edge Download/CSCT Project/project/Packet_based_feature_web/human_preprocessed_packet_data_30_percent.csv')
     packet_df_numeric = pd.read_csv('/Volumes/FileManager/Edge Download/CSCT Project/project/Packet_based_feature_web/preprocessed_packet_data_30_percent.csv')
    
-    # Load numeric (preprocessed) data for model input dataset
-    # packet_df_numeric = pd.read_csv('/Volumes/FileManager/Edge Download/CSCT Project/project/Packet_based_feature_web/preprocessed_packet_data_web.csv')
 
-    # Load data for test
+    # Load data for test_live device
     # flow_df = pd.read_csv('/Volumes/FileManager/Edge Download/CSCT Project/project/Code/Test/network_flows.csv')
     # packet_df_display = pd.read_csv('/Volumes/FileManager/Edge Download/CSCT Project/project/Code/Test/network_packets_human.csv')
     # packet_df_numeric = pd.read_csv('/Volumes/FileManager/Edge Download/CSCT Project/project/Code/Test/network_packets_numeric.csv')
@@ -77,10 +76,10 @@ def dashboard():
 
     # Print DataFrame heads for inspection
     print("\n=== Flow Data (with predictions) ===")
-    print(flow_df.head(10))  # first 10 rows
+    print(flow_df.head(10))  #  10 rows
 
     print("\n=== Packet Data (with predictions) ===")
-    print(packet_df_display.head(10))  # first 10 rows
+    print(packet_df_display.head(10)) 
 
     # Print anomaly counts and percentages
     print(f"\nFlow anomalies: {flow_count} / {total_flow} ({flow_percent}%)")
